@@ -311,3 +311,328 @@ plt.show
 
 ![ARARAQUARA-vs-BAURU-Number-of-New-Cases](images/ARARAQUARA-vs-BAURU-Number-of-New-Cases.png)
 
+### 5.2.2 - Number of deaths
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-02-21")
+
+#we will use both cities in y axis
+araraquaraFilter = previousSituation.loc[(previousSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['new_deaths'])
+
+bauruFilter = previousSituation.loc[(previousSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['new_deaths'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Nº of New Deaths)')
+plt.title('01 Jan to 21 fev', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Deaths in Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Deaths in Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Deaths](images/ARARAQUARA-vs-BAURU-Number-of-New-Deaths.png)
+
+### 5.2.2 - Death Rate
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-02-21")
+
+#we will use both cities in y axis
+araraquaraFilter = previousSituation.loc[(previousSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['last_available_death_rate'])
+
+bauruFilter = previousSituation.loc[(previousSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['last_available_death_rate'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Death Rate)')
+plt.title('01 Jan to 21 fev', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Death Rate from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Death Rate from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Cases](images/ARARAQUARA-vs-BAURU-Number-of-New-Cases.png)
+
+### 5.2.3 - Hospital Occupancy Rate
+```python
+#filtering the range of the dates that we will need
+previousSituation = ocuppancyRateCitiesdf.loc['2021-01-21':'2021-02-21']
+previousSituation.reset_index(inplace = True)
+```
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-02-21")
+
+'''For the data from the field "ocupacao_leitos_ultimo_dia" or in english occupancy rate for the last day, 
+the Department of Health of São Paulo used the separator comma instead of dot. But matplotlib and numpy 
+can't work with commas in this particular case (I believe), so only in this case, before plotting the 
+graph I'm converting all the commas to dot.'''
+
+#we will use both cities in y axis. 
+cityFilterAraraquara = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 03 Araraquara')]
+occupancyAraraquara = cityFilterAraraquara.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyAraraquaraconverted = [i.replace(',', '.') for i in occupancyAraraquara['ocupacao_leitos_ultimo_dia']]
+
+cityFilterBauru = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 06 Bauru')]
+occupancyBauru = cityFilterBauru.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyBauruconverted = [i.replace(',', '.') for i in occupancyBauru['ocupacao_leitos_ultimo_dia']]
+
+#putting everything together on the graph
+plt.figure(figsize=(20,15))
+plt.style.use('Solarize_Light2')
+plt.title('ARARAQUARA vs BAURU (Occupancy Rate)')
+plt.title('21 Jan to 21 fev', loc='right', fontstyle='italic')
+plt.plot(x_axis,occupancyAraraquaraconverted, color='blue')
+plt.plot(x_axis,occupancyBauruconverted, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Occupancy Rate from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Occupancy Rate from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Occupancy-Rate](images/ARARAQUARA-vs-BAURU-Occupancy-Rate.png)
+
+### 5.2.4 - Patients in Nursing Beds for COVID-19
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-02-21")
+
+#we will use both cities in y axis
+cityFilterAraraquara = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 03 Araraquara')]
+nursingBedsAraraquara = cityFilterAraraquara.filter(items = ['pacientes_enf_ultimo_dia'])
+
+cityFilterBauru = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 06 Bauru')]
+nursingBedsBauru = cityFilterBauru.filter(items = ['pacientes_enf_ultimo_dia'])
+
+#putting everything together on the graph
+plt.figure(figsize=(20,15))
+plt.style.use('Solarize_Light2')
+plt.title('ARARAQUARA vs BAURU (Patients in Nursing beds)')
+plt.title('21 Jan to 21 fev', loc='right', fontstyle='italic')
+plt.plot(x_axis,nursingBedsAraraquara, color='blue')
+plt.plot(x_axis,nursingBedsBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Patients in Nursing beds from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Patients in Nursing beds from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Patients-in-Nursing-beds](images/ARARAQUARA-vs-BAURU-Patients-in-Nursing-beds.png)
+
+## 5.3 - The scenario after the lockdown
+```python
+#filtering the range of the dates that we will need
+afterSituation = casesAndDeathCitiesdf.loc['2021-03-03':'2021-04-03']
+afterSituation.reset_index(inplace = True)
+```
+### 5.3.1 - New cases
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-03-03",end="2021-04-03")
+
+#we will use both cities in y axis
+araraquaraFilter = afterSituation.loc[(afterSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['new_confirmed'])
+
+bauruFilter = afterSituation.loc[(afterSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['new_confirmed'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Nº of News Cases)')
+plt.title('03 Mar to 03 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='New Cases Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='New Cases Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Cases-After](images/ARARAQUARA-vs-BAURU-Number-of-New-Cases-After.png)
+
+### 5.3.2 - Number of Deaths
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-03-03",end="2021-04-03")
+
+#we will use both cities in y axis
+araraquaraFilter = afterSituation.loc[(afterSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['new_deaths'])
+
+bauruFilter = afterSituation.loc[(afterSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['new_deaths'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Nº of Deaths)')
+plt.title('03 Mar to 03 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Deaths in Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Deaths in Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Deaths-After](images/ARARAQUARA-vs-BAURU-Number-of-New-Deaths-After.png)
+
+### 5.3.3 - Hospital Occupancy Rate
+```python
+#filtering the range of the dates that we will need
+afterSituation = ocuppancyRateCitiesdf.loc['2021-03-03':'2021-04-03']
+afterSituation.reset_index(inplace = True)
+```
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-03-03",end="2021-04-03")
+
+#we will use both cities in y axis
+cityFilterAraraquara = afterSituation.loc[(afterSituation['nome_drs'] == 'DRS 03 Araraquara')]
+occupancyAraraquara = cityFilterAraraquara.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyAraraquaraconverted = [i.replace(',', '.') for i in occupancyAraraquara['ocupacao_leitos_ultimo_dia']]
+
+cityFilterBauru = afterSituation.loc[(afterSituation['nome_drs'] == 'DRS 06 Bauru')]
+occupancyBauru = cityFilterBauru.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyBauruconverted = [i.replace(',', '.') for i in occupancyBauru['ocupacao_leitos_ultimo_dia']]
+
+#putting everything together on the graph
+plt.figure(figsize=(20,15))
+plt.style.use('Solarize_Light2')
+plt.title('ARARAQUARA vs BAURU (Occupancy Rate)')
+plt.title('03 Mar to 03 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,occupancyAraraquaraconverted, color='blue')
+plt.plot(x_axis,occupancyBauruconverted, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Occupancy Rate from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Occupancy Rate from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Occupancy-Rate-After](images/ARARAQUARA-vs-BAURU-Occupancy-Rate-After.png)
+
+### 5.3.4 - Patients in Nursing Beds for COVID-19
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-03-03",end="2021-04-03")
+
+#we will use both cities in y axis
+cityFilterAraraquara = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 03 Araraquara')]
+nursingBedsAraraquara = cityFilterAraraquara.filter(items = ['pacientes_enf_ultimo_dia'])
+
+cityFilterBauru = previousSituation.loc[(previousSituation['nome_drs'] == 'DRS 06 Bauru')]
+nursingBedsBauru = cityFilterBauru.filter(items = ['pacientes_enf_ultimo_dia'])
+
+#putting everything together on the graph
+plt.figure(figsize=(20,15))
+plt.style.use('Solarize_Light2')
+plt.title('ARARAQUARA vs BAURU (Patients in Nursing beds)')
+plt.title('21 Jan to 21 fev', loc='right', fontstyle='italic')
+plt.plot(x_axis,nursingBedsAraraquara, color='blue')
+plt.plot(x_axis,nursingBedsBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Patients in Nursing beds from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Patients in Nursing beds from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Patients-in-Nursing-beds-After](images/ARARAQUARA-vs-BAURU-Patients-in-Nursing-beds-After.png)
+
+## 5.4 - Before and After Lockdown visualization
+```python
+#filtering the range of the dates that we will need
+beforeAndAfterSituation = casesAndDeathCitiesdf.loc['2021-01-21':'2021-04-03']
+beforeAndAfterSituation.reset_index(inplace = True)
+```
+### 5.4.1 - New cases
+```python 
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-04-03")
+
+#we will use both cities in y axis
+araraquaraFilter = beforeAndAfterSituation.loc[(beforeAndAfterSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['new_confirmed'])
+
+bauruFilter = beforeAndAfterSituation.loc[(beforeAndAfterSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['new_confirmed'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Nº of News Cases)')
+plt.title('21 Jan to 21 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='New Cases Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='New Cases Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Cases-Before-After](images/ARARAQUARA-vs-BAURU-Number-of-New-Cases-Before-After.png)
+
+### 5.4.2 - Number of Deaths
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-04-03")
+
+#we will use both cities in y axis
+araraquaraFilter = beforeAndAfterSituation.loc[(beforeAndAfterSituation['city'] == 'Araraquara')]
+confirmedAraraquara = araraquaraFilter.filter(items = ['new_deaths'])
+
+bauruFilter = beforeAndAfterSituation.loc[(beforeAndAfterSituation['city'] == 'Bauru')]
+confirmedBauru = bauruFilter.filter(items = ['new_deaths'])
+
+#putting everything together on the graph
+plt.figure(figsize=(15,10))
+plt.title('ARARAQUARA vs BAURU (Nº of Deaths)')
+plt.title('21 Jan to 21 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,confirmedAraraquara, color='blue')
+plt.plot(x_axis,confirmedBauru, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Deaths in Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Deaths in Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
+
+![ARARAQUARA-vs-BAURU-Number-of-New-Deaths-Before-After](images/ARARAQUARA-vs-BAURU-Number-of-New-Deaths-Before-After.png)
+
+### 5.4.3 - Hospital Occupancy Rate
+```python
+beforeAndAfterSituation = ocuppancyRateCitiesdf.loc['2021-01-21':'2021-04-03']
+beforeAndAfterSituation.reset_index(inplace = True)
+```
+```python
+#creating the range of dates that we will use as x axis
+x_axis = pd.date_range(start="2021-01-21",end="2021-04-03")
+
+#we will use both cities in y axis
+cityFilterAraraquara = beforeAndAfterSituation.loc[(beforeAndAfterSituation['nome_drs'] == 'DRS 03 Araraquara')]
+occupancyAraraquara = cityFilterAraraquara.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyAraraquaraconverted = [i.replace(',', '.') for i in occupancyAraraquara['ocupacao_leitos_ultimo_dia']]
+
+cityFilterBauru = beforeAndAfterSituation.loc[(beforeAndAfterSituation['nome_drs'] == 'DRS 06 Bauru')]
+occupancyBauru = cityFilterBauru.filter(items = ['ocupacao_leitos_ultimo_dia'])
+occupancyBauruconverted = [i.replace(',', '.') for i in occupancyBauru['ocupacao_leitos_ultimo_dia']]
+
+#putting everything together on the graph
+plt.figure(figsize=(25,40))
+plt.style.use('Solarize_Light2')
+plt.title('ARARAQUARA vs BAURU (Occupancy Rate)')
+plt.title('21 Jan to 21 Abr', loc='right', fontstyle='italic')
+plt.plot(x_axis,occupancyAraraquaraconverted, color='blue')
+plt.plot(x_axis,occupancyBauruconverted, color='red')
+araraquaraLabel = mpatches.Patch(color='blue', label='Occupancy Rate from Araraquara')
+bauruLabel = mpatches.Patch(color='red', label='Occupancy Rate from Bauru')
+plt.legend(handles=[araraquaraLabel,bauruLabel])
+plt.show
+```
