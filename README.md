@@ -636,3 +636,6 @@ bauruLabel = mpatches.Patch(color='red', label='Occupancy Rate from Bauru')
 plt.legend(handles=[araraquaraLabel,bauruLabel])
 plt.show
 ```
+
+![ARARAQUARA-vs-BAURU-Occupancy-Rate-Before-After](images/ARARAQUARA-vs-BAURU-Occupancy-Rate-Before-After.png)
+
